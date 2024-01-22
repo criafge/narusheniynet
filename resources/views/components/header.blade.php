@@ -17,6 +17,7 @@
             @if (auth()->user())
                 @if (auth()->user()->role === 'client')
                     <a class="link-body-emphasis" href="{{ route('application') }}">Добавить заявку</a>
+                    <a class="link-body-emphasis" href="{{ route('data') }}">Изменить данные</a>
                 @endif
                 <a class="link-body-emphasis" href="/home">Кабинет</a>
                 <a class="btn btn-danger" href="{{ route('logout') }}">Выход</a>

@@ -115,4 +115,33 @@ class UserController extends Controller
         $application->delete();
         return redirect()->back();
     }
+    public function userData()
+    {
+        return view('user-data', ['user'=> Auth::user()]);
+    }
+
+    public function changeData(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+            'login' => 'required',
+            'name' => 'required|string',
+            'surname' => 'required|string',
+            'phone' => 'required|numeric'
+        ], [
+            'login.required' => 'Слишком пусто',
+            'email.required' => 'Слишком пусто',
+            'email.email' => 'Ну не тот формат',
+            'name.required' => 'Слишком пусто',
+            'name.string' => 'Ну не тот формат',
+            'surname.string' => 'Ну не тот формат',
+            'surname.required' => 'Слишком пусто',
+            'phone.required' => 'Слишком пусто',
+            'phone.numeric' => 'Ну не тот формат',
+        ]);
+        if(empty($request->password)){
+            $request['password'] = Auth::user()->password;
+        }
+        User::find(Auth::user()->id)->update($request->except('_token'));
+        return redirect()->back();
+    }
 }

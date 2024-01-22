@@ -16,7 +16,9 @@ Route::get('logout', [UserController::class, 'logout'])->name('logout');
 Route::get('/application', [UserController::class, 'applicationForm'])->name('application')->middleware('auth');
 Route::post('/application/create', [UserController::class, 'createApplication'])->name('application-create')->middleware('auth');
 Route::get('application/delete/{application}', [UserController::class, 'deleteApplication'])->name('delete-application')->middleware('auth');
-Route::post('/user/change');
+
+Route::get('/user/data', [UserController::class, 'userData'])->name('data')->middleware('auth');
+Route::post('/user/change', [UserController::class, 'changeData'])->name('change')->middleware('auth');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin')->middleware('admin');
 Route::get('applications/{application}/status/confirm', [AdminController::class, 'confirm'])->name('confirm')->middleware('admin');
