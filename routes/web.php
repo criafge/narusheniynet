@@ -5,21 +5,28 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/',[UserController::class, 'index'])->name('index');
-
 Route::post('/signin', [UserController::class, 'signin'])->name('signin');
 Route::post('/signup', [UserController::class, 'signup'])->name('signup');
-
-Route::get('home', [UserController::class, 'cabinet'])->name('home');
-
 Route::get('logout', [UserController::class, 'logout'])->name('logout');
 
-Route::get('/application', [UserController::class, 'applicationForm'])->name('application')->middleware('auth');
-Route::post('/application/create', [UserController::class, 'createApplication'])->name('application-create')->middleware('auth');
-Route::get('application/delete/{application}', [UserController::class, 'deleteApplication'])->name('delete-application')->middleware('auth');
 
-Route::get('/user/data', [UserController::class, 'userData'])->name('data')->middleware('auth');
-Route::post('/user/change', [UserController::class, 'changeData'])->name('change')->middleware('auth');
+Route::group(['middleware' => 'auth'], function(){
+    Route::get('home', [UserController::class, 'cabinet'])->name('home');
 
-Route::get('/admin', [AdminController::class, 'index'])->name('admin')->middleware('admin');
-Route::get('applications/{application}/status/confirm', [AdminController::class, 'confirm'])->name('confirm')->middleware('admin');
-Route::get('applications/{application}/status/refuse', [AdminController::class, 'refuse'])->name('refuse')->middleware('admin');
+    Route::group(['prefix' => 'user'], function(){
+        Route::get('/data', [UserController::class, 'userData'])->name('data');
+        Route::post('/change', [UserController::class, 'changeData'])->name('change');
+    });
+    Route::group(['prefix' => 'application'], function(){
+        Route::get('/', [UserController::class, 'applicationForm'])->name('application');
+        Route::post('/create', [UserController::class, 'createApplication'])->name('application-create');
+        Route::get('/delete/{application}', [UserController::class, 'deleteApplication'])->name('delete-application');
+    });
+});
+
+Route::group(['middleware' => 'auth', 'admin'], function(){
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::get('applications/{application}/status/confirm', [AdminController::class, 'confirm'])->name('confirm');
+    Route::get('applications/{application}/status/refuse', [AdminController::class, 'refuse'])->name('refuse');
+});
+
