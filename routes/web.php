@@ -18,6 +18,6 @@ Route::post('/application/create', [UserController::class, 'createApplication'])
 Route::get('application/delete/{application}', [UserController::class, 'deleteApplication'])->name('delete-application')->middleware('auth');
 Route::post('/user/change');
 
-Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-Route::get('applications/{application}/status/confirm', [AdminController::class, 'confirm'])->name('confirm');
-Route::get('applications/{application}/status/refuse', [AdminController::class, 'refuse'])->name('refuse');
+Route::get('/admin', [AdminController::class, 'index'])->name('admin')->middleware('admin');
+Route::get('applications/{application}/status/confirm', [AdminController::class, 'confirm'])->name('confirm')->middleware('admin');
+Route::get('applications/{application}/status/refuse', [AdminController::class, 'refuse'])->name('refuse')->middleware('admin');
