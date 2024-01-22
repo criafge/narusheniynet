@@ -6,6 +6,8 @@
                 <th scope="col">#</th>
                 <th scope="col">Номер машины</th>
                 <th scope="col">Статус заявки</th>
+                <th scope="col">Дата добавления</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -13,7 +15,9 @@
                 <tr>
                     <th scope="row">{{$item->id}}</th>
                     <td>{{$item->number}}</td>
-                    <td>{{$item->status_id}}</td>
+                    <td>{{$item->status}}</td>
+                    <td>{{$item->created_at}}</td>
+                    <td><a href="{{route('delete-application', $item->id)}}" class="btn btn-danger">Удалить заявку</a></td>
                 </tr>
             @endforeach
         </tbody>

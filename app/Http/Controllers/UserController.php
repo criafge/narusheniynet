@@ -20,7 +20,7 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
-            'login' => 'required',
+            'login' => 'unique:users,login|required',
             'name' => 'required|string',
             'surname' => 'required|string',
             'phone' => 'required|numeric'
@@ -57,7 +57,6 @@ class UserController extends Controller
         $user = $request->only(["login", "password"]);
 
         if (Auth::attempt(['login' => $request->loginSignin, 'password' => $request->passwordSignin]))
-        // if (Auth::attempt($user)) 
         {
             return redirect("home");
         } else {
@@ -82,7 +81,7 @@ class UserController extends Controller
             }
             return view('home', ['applications' => $applications]);
         } else {
-            return view('admin');
+            return redirect('/admin');
         }
     }
 
@@ -104,11 +103,16 @@ class UserController extends Controller
             ]
         );
         Application::create([
-            'number' => $request->number, 
+            'number' => $request->number,
             'description' => $request->description,
-            'user_id' => Auth::user()->id, 
+            'user_id' => Auth::user()->id,
         ]);
         return redirect()->back();
         // dd($request->all());
+    }
+
+    public function deleteApplication(Application $application){
+        $application->delete();
+        return redirect()->back();
     }
 }

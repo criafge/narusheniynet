@@ -11,11 +11,15 @@
 </head>
 
 <body>
-    <nav>
-        @if (auth()->user())
-            <a href="{{ route('logout') }}">Выход</a>
-            <a href="/home">Кабинет</a>
-            <a href="{{route('application')}}">Добавить заявку</a>
+    <div class="container">
+        <nav class="d-flex align-items-center justify-content-end gap-3 fs-5 m">
 
-        @endif
-    </nav>
+            @if (auth()->user())
+                @if (auth()->user()->role === 'client')
+                    <a class="link-body-emphasis" href="{{ route('application') }}">Добавить заявку</a>
+                @endif
+                <a class="link-body-emphasis" href="/home">Кабинет</a>
+                <a class="btn btn-danger" href="{{ route('logout') }}">Выход</a>
+            @endif
+        </nav>
+    </div>
