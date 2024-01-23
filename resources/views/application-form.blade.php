@@ -22,6 +22,11 @@
                 @enderror
             </div>
             <button type="submit" class="btn btn-danger">Submit</button>
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show my-3" role="alert">
+                    {{ session('success') }}
+                </div>
+            @endif
         </form>
     </div>
 </div>

@@ -24,10 +24,11 @@ class AdminController extends Controller
 
     public function index(Request $request){
         if(!isset($request->sort)){
-            $applications = Application::all();
+            $applications = Application::paginate(3);
         }else{
-            $applications = Application::orderBy('created_at', 'desc')->get();
+            $applications = Application::orderBy('created_at', 'desc')->paginate(3);
         }
+
         foreach($applications as $item){
             $item->status = $item->getStatus->title;
         }

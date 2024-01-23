@@ -74,7 +74,13 @@
                 @enderror
             </div>
             <button type="submit" class="btn btn-danger">Войти</button>
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show my-3" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
         </form>
+
     </div>
 </div>
 </body>

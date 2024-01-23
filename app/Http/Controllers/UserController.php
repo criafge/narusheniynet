@@ -18,23 +18,27 @@ class UserController extends Controller
     public function signup(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email' => 'unique:users,email|required|email',
+            'password' => 'required|min:6',
             'login' => 'unique:users,login|required',
-            'name' => 'required|string',
-            'surname' => 'required|string',
-            'phone' => 'required|numeric'
+            'name' => 'required|regex:/[А-Яа-яЁё]/u',
+            'surname' => 'required|regex:/[А-Яа-яЁё]/u',
+            'phone' => 'required|numeric|min:11'
         ], [
             'login.required' => 'Слишком пусто',
+            'login.unique' => 'Такой уже есть, меняй',
             'email.required' => 'Слишком пусто',
+            'email.unique' => 'Такой уже есть, меняй',
             'email.email' => 'Ну не тот формат',
             'password.required' => 'Слишком пусто',
+            'password.min' => 'Малоооо',
             'name.required' => 'Слишком пусто',
-            'name.string' => 'Ну не тот формат',
-            'surname.string' => 'Ну не тот формат',
+            'name.regex' => 'Ну не тот формат',
+            'surname.regex' => 'Ну не тот формат',
             'surname.required' => 'Слишком пусто',
             'phone.required' => 'Слишком пусто',
             'phone.numeric' => 'Ну не тот формат',
+            'phone.min' => 'Ну не тот формат',
         ]);
         User::create($request->all());
         return redirect('/');
@@ -59,8 +63,9 @@ class UserController extends Controller
         if (Auth::attempt(['login' => $request->loginSignin, 'password' => $request->passwordSignin]))
         {
             return redirect("home");
-        } else {
-            return redirect()->back();
+        } 
+        else {
+            return redirect()->back()->with('error', 'Неправильный логин или пароль');
         }
     }
 
@@ -74,7 +79,6 @@ class UserController extends Controller
     public function cabinet()
     {
         if (Auth::user()->role === 'client') {
-
             $applications = Auth::user()->applications;
             foreach($applications as $item){
                 $item->status = $item->getStatus->title;
@@ -107,7 +111,7 @@ class UserController extends Controller
             'description' => $request->description,
             'user_id' => Auth::user()->id,
         ]);
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Заявка добавлена!');
         // dd($request->all());
     }
 
